@@ -1,0 +1,23 @@
+[project]
+name = "apple-design-hig"
+version = "0.1.0"
+description = "Apple Human Interface Guidelines (HIG) skill, DocC updater CLI, and MCP server"
+readme = "README.md"
+authors = [{ name = "mr8lu" }]
+requires-python = ">=3.12"
+dependencies = [
+    "mcp>=1.6.0",
+]
+
+[project.scripts]
+apple-design-hig = "apple_design_hig.cli:main"
+apple-design-hig-mcp = "apple_design_hig.mcp_server:main"
+
+[build-system]
+requires = ["uv_build>=0.10.0,<0.13.0"]
+build-backend = "uv_build"
+
+[dependency-groups]
+dev = [
+    "pytest>=8.3.0",
+]

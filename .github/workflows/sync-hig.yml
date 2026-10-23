@@ -1,0 +1,38 @@
+name: Sync Apple HIG References
+
+on:
+  schedule:
+    - cron: "0 9 * * 1"
+  workflow_dispatch:
+  push:
+    branches:
+      - main
+
+permissions:
+  contents: write
+
+jobs:
+  test-and-sync:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Install uv
+        uses: astral-sh/setup-uv@v5
+
+      - name: Run unit tests
+        run: uv run pytest
+
+      - name: Sync Apple HIG references from DocC API
+        run: uv run apple-design-hig sync
+
+      - name: Commit updated references if changed
+        run: |
+          if [ -n "$(git status --porcelain skills/apple-design-hig/references)" ]; then
+            git config user.name "github-actions[bot]"
+            git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+            git add skills/apple-design-hig/references
+            git commit -m "chore(hig): sync latest Apple Human Interface Guidelines references"
+            git push
+          fi
